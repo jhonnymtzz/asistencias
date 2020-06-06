@@ -186,7 +186,9 @@ $fecha=date("Y-m-d");
     <!-- popper -->
     <script src="../plugins/popper/popper.min.js" type="text/javascript"></script>
     <!-- sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="../plugins/bootstrap-sweetalert-master/dist/sweetalert.js" type="text/javascript"></script>
+ 
     <script>
         combo_ecivil();
         selectTwo();

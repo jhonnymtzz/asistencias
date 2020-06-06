@@ -2,6 +2,140 @@
 var obscuro  = "#343A40";
 var rojo     = "#D9304B";
 
+function abrirModalClave(){
+    Swal.fire({
+        title: "Cambio de contraseña",
+        html:
+        "<br>"+
+        "<input id='pass' type='text' oninput='validarCambioI();' class='form-control focus' placeholder='Ingresa tu nueva contraseña'>"+
+        "<input id='repass' type='password' oninput='validarCambioI();' class='form-control mt-4' placeholder='Confirma tu nueva contraseña'>"+
+        "<span id='msjNumCaracteres' class='text-muted float-left mt-2'>La contraseña debe tener 8 o más caracteres <i hidden class='far fa-check-circle fa-xs'></i></span>"+
+        "<br>"+
+        "<span id='msjCoincidencia' class='text-muted float-left'>Las contraseñas deben coincidir <i hidden class='far fa-check-circle fa-xs'></i></span>"+
+        "<br><br><br>"+
+        "<div class='row w-100 m-0'>"+
+        "<div class='col-md-6 p-0'><button id='btn_generar' onclick='generarClaveI();' class='btn btn-outline-dark float-left'><i class='fas fa-dice-five fa-spin'></i> Generar contraseña</button></div>"+
+        "<div class='col-md-6 p-0'><button disabled id='btn_cambiar' onclick='Swal.clickConfirm();' class='btn btn-success float-right'><i class='fa fa-check'></i> Confirmar</button></div>"+
+        "</div>",
+        showConfirmButton: false,
+        showCloseButton: true
+    }).then((result) => {  // se lee el evento SwalclickConfirm ejecutado a traves del button btn_cambiar
+        if (result.value) {
+
+            //Metodo para cambiar la clave
+            cambiarClaveI(idUsuario);
+
+        }
+    });
+};
+
+function cambiarClaveI(id_usuario){
+
+    var nuevaClave = $("#pass").val();
+
+    $.ajax({
+        url:"../funciones/cambiarClave.php",
+        type:"POST",
+        dataType:"html",
+        data:{"clave": nuevaClave, "id":id_usuario},
+        success:function(respuesta){
+
+            console.log(nuevaClave+" - "+id_usuario+" - "+respuesta);
+
+            Swal.fire("Hecho !","La contraseña ha sido cambiada correctamente","success");
+            
+        },
+        error:function(xhr, status){
+            alert("Error: "+xhr+" => "+status);
+        },
+    });
+};
+
+function validarCambioI(){
+
+    var numCaracteres = $("#pass").val().length;
+    var puntosNumCaracteres = 0;  
+    var puntosIguales = 0;
+
+    //decide si la contraseña tiene 8 o más caracteres
+    if (numCaracteres >= 8) {
+
+        $("#msjNumCaracteres").removeClass("text-muted");
+        $("#msjNumCaracteres").addClass("text-success");
+        $("#msjNumCaracteres > i").removeAttr("hidden");
+        puntosNumCaracteres++;
+    }
+    else{
+        $("#msjNumCaracteres").removeClass("text-success");
+        $("#msjNumCaracteres").addClass("text-muted");
+        $("#msjNumCaracteres > i").attr("hidden", "hidden");
+        // puntosNumCaracteres--;
+    }
+    //decide si son iguales
+    if (numCaracteres >= 1 && $("#pass").val() == $("#repass").val()) {
+
+        $("#msjCoincidencia").removeClass("text-muted");
+        $("#msjCoincidencia").addClass("text-success");
+        $("#msjCoincidencia > i").removeAttr("hidden");
+        puntosIguales++;
+    }
+    else{
+        $("#msjCoincidencia").removeClass("text-success");
+        $("#msjCoincidencia").addClass("text-muted");
+        $("#msjCoincidencia > i").attr("hidden", "hidden");
+        // puntosIguales--;
+    }
+
+    //la suma total final de puntos debe ser 2
+    var puntosValidacion = puntosNumCaracteres + puntosIguales;
+    console.log("puntos: " + puntosValidacion);
+
+    //calcula los puntos obtenidos
+    if (puntosValidacion == 2) {
+        $("#btn_cambiar").removeAttr("disabled");
+    }
+    else{
+        $("#btn_cambiar").attr("disabled", "disabled");
+    }
+
+};
+
+function generarClaveI(){
+
+    var stringABC = "abcdefghijklmnopqrstuvwxyz";
+    var string123 = "0123456789";
+    var nuevaClave = "";
+
+    for (var i = 0 ; i <= 7; i++) {
+
+        var preguntaABC123 = Math.floor(Math.random() * 2);// decide si genera cracter abc o numerico 123
+
+        if (preguntaABC123 == 0) { // 0 == caracter abc
+
+            var indexABC = Math.floor(Math.random() * 26); //index del 0 al 25
+            var preguntaMayusMinus = Math.floor(Math.random() * 2); //decide si genera abc mayuscula o lo deja minuscula
+
+            if (preguntaMayusMinus == 0) { //se queda minuscula
+                var caracterABC = stringABC.substr(indexABC, 1);
+                nuevaClave = nuevaClave + caracterABC;
+            }
+            else{ //se genera en mayuscula
+                var caracterABC = stringABC.substr(indexABC, 1).toUpperCase();
+                nuevaClave = nuevaClave + caracterABC;
+            }
+        }
+        else{ // 1 == caracter numerico 123
+
+            var index123 = Math.floor(Math.random() * 10); //index del 0 al 9
+            var caracter123 = string123.substr(index123, 1);
+            nuevaClave = nuevaClave + caracter123;
+        }
+    }
+    //console.log(string123+" "+stringABC+" "+preguntaABC123);
+    $("#pass").val(nuevaClave);
+    validarCambioI();
+};
+
 function ocultarSecciones(){
     // ASISTENCIAS
     $("#asistencia").hide();

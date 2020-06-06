@@ -48,8 +48,8 @@ $("#frmLogin").submit(function(e){
                             title: "Cambio de contraseña",
                             html:
                             "<br>"+
-                            "<input id='pass' type='text' onkeyup='validarCambio();' class='form-control focus' placeholder='Ingresa tu nueva contraseña'>"+
-                            "<input id='repass' type='password' onkeyup='validarCambio();' class='form-control mt-4' placeholder='Confirma tu nueva contraseña'>"+
+                            "<input id='pass' type='text' oninput='validarCambio();' class='form-control focus' placeholder='Ingresa tu nueva contraseña'>"+
+                            "<input id='repass' type='password' oninput='validarCambio();' class='form-control mt-4' placeholder='Confirma tu nueva contraseña'>"+
                             "<span id='msjNumCaracteres' class='text-muted float-left mt-2'>La contraseña debe tener 8 o más caracteres <i hidden class='far fa-check-circle fa-xs'></i></span>"+
                             "<br>"+
                             "<span id='msjCoincidencia' class='text-muted float-left'>Las contraseñas deben coincidir <i hidden class='far fa-check-circle fa-xs'></i></span>"+
@@ -141,7 +141,7 @@ function cambiarClave(id_usuario){
     var nuevaClave = $("#pass").val();
 
     $.ajax({
-        url:"../mLogin/cambiarClave.php",
+        url:"../funciones/cambiarClave.php",
         type:"POST",
         dataType:"html",
         data:{"clave": nuevaClave, "id":id_usuario},
@@ -161,38 +161,41 @@ function cambiarClave(id_usuario){
 function validarCambio(){
 
     var numCaracteres = $("#pass").val().length;
-    var puntosValidacion = 0;  //la suma total final de puntos debe ser 2
+    var puntosNumCaracteres = 0;  
+    var puntosIguales = 0;
 
-    if (numCaracteres > 0) {
-        //decide si la contraseña tiene 8 o más caracteres
-        if (numCaracteres >= 8) {
+    //decide si la contraseña tiene 8 o más caracteres
+    if (numCaracteres >= 8) {
 
-            $("#msjNumCaracteres").removeClass("text-muted");
-            $("#msjNumCaracteres").addClass("text-success");
-            $("#msjNumCaracteres > i").removeAttr("hidden");
-            puntosValidacion++;
-        }
-        else{
-            $("#msjNumCaracteres").removeClass("text-success");
-            $("#msjNumCaracteres").addClass("text-muted");
-            $("#msjNumCaracteres > i").attr("hidden", "hidden");
-            puntosValidacion--;
-        }
-        //decide si son iguales
-        if ($("#pass").val() == $("#repass").val()) {
-
-            $("#msjCoincidencia").removeClass("text-muted");
-            $("#msjCoincidencia").addClass("text-success");
-            $("#msjCoincidencia > i").removeAttr("hidden");
-            puntosValidacion++;
-        }
-        else{
-            $("#msjCoincidencia").removeClass("text-success");
-            $("#msjCoincidencia").addClass("text-muted");
-            $("#msjCoincidencia > i").attr("hidden", "hidden");
-            puntosValidacion--;
-        }
+        $("#msjNumCaracteres").removeClass("text-muted");
+        $("#msjNumCaracteres").addClass("text-success");
+        $("#msjNumCaracteres > i").removeAttr("hidden");
+        puntosNumCaracteres++;
     }
+    else{
+        $("#msjNumCaracteres").removeClass("text-success");
+        $("#msjNumCaracteres").addClass("text-muted");
+        $("#msjNumCaracteres > i").attr("hidden", "hidden");
+        // puntosNumCaracteres--;
+    }
+    //decide si son iguales
+    if (numCaracteres >= 1 && $("#pass").val() == $("#repass").val()) {
+
+        $("#msjCoincidencia").removeClass("text-muted");
+        $("#msjCoincidencia").addClass("text-success");
+        $("#msjCoincidencia > i").removeAttr("hidden");
+        puntosIguales++;
+    }
+    else{
+        $("#msjCoincidencia").removeClass("text-success");
+        $("#msjCoincidencia").addClass("text-muted");
+        $("#msjCoincidencia > i").attr("hidden", "hidden");
+        // puntosIguales--;
+    }
+
+    //la suma total final de puntos debe ser 2
+    var puntosValidacion = puntosNumCaracteres + puntosIguales;
+    console.log("puntos: " + puntosValidacion);
 
     //calcula los puntos obtenidos
     if (puntosValidacion == 2) {
