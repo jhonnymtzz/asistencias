@@ -238,6 +238,9 @@ function aplicarTema(id,validador){
                 //alertify.success(actividad,2);
 
                 if(validador=='enlace'){
+                    //reproduzco el sonido solo si es por enlace y no cuando inicio sesión
+                    $("#audio_tema")[0].play();
+                    
                     preloader(1,"Cambiando al tema "+tema);
                     actividad  ="Ha cambiado al tema "+tema;
                     var idUser=$("#inicioIdusuario").val();

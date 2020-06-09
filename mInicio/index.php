@@ -38,6 +38,9 @@ $fecha=date("Y-m-d");
 </head>
 
 <body class="animated  fadeIn">
+<!-- Audio que se reproducirá al ejecutar el evento play() en jquery -->
+<audio src="../audios/servo9.mp3" id="audio_tema"></audio>
+
 <a href="javascript:void(0);" id="scroll" title="Scroll to Top" style="display: none;">Top<span></span></a>
     <div id="contentLogin">
         <?php
