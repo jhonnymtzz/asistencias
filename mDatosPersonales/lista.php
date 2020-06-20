@@ -7,20 +7,23 @@ include'../funciones/calcularEdad.php';
 $varGral="-DP";
 
 $cadena = "SELECT
-                id_datos,
-                activo,
-                nombre,
-                ap_paterno,
-                ap_materno,
-                fecha_nac,
-                correo,
-                curp,
-                clave,
-                domicilio,
-                sexo,
-                id_ecivil
-            FROM
-                datos ORDER BY id_datos DESC";
+                d.id_datos,
+                d.activo,
+                d.nombre,
+                d.ap_paterno,
+                d.ap_materno,
+                d.fecha_nac,
+                d.correo,
+                d.curp,
+                d.clave,
+                d.domicilio,
+                d.sexo,
+                d.id_ecivil,
+                h.id_horario,
+                h.turno
+            FROM datos d
+            LEFT JOIN horarios h ON h.id_datos_persona = d.id_datos
+            ORDER BY d.id_datos ASC";
 $consultar = mysqli_query($conexionLi, $cadena);
 //$row = mysqli_fetch_array($consultar);
 
@@ -36,6 +39,8 @@ $consultar = mysqli_query($conexionLi, $cadena);
                 <th scope="col">Datos</th>
                 <th scope="col">Foto</th>
                 <th scope="col">Audio</th>
+                <!-- AQUI VA EL TITULO HORARIO -->
+                <th scope="col">Horario</th>
                 <th scope="col">Clave</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Ap. Paterno</th>
@@ -78,6 +83,22 @@ $consultar = mysqli_query($conexionLi, $cadena);
             $sexo       = $row[10];
             $ecivil     = $row[11];
             $nCompleto  = $row[2].' '.$row[3].' '.$row[4];
+
+            $id_horario = $row[12];
+            $turno = $row[13];
+
+            if(empty($id_horario)){
+                $tieneHorario = "no";
+                $iconHorario="fas fa-times fa-lg";
+                $btnHorario = "btn-outline-secondary";
+                $id_horario = "no";
+                $turno = "esp";
+            }
+            else{
+                $tieneHorario = "si";
+                $iconHorario="fas fa-check fa-md";
+                $btnHorario = "btn-outline-success";
+            }
             
             $sonido     ="El nombre completo de la persona es ".$nombre." ".$paterno." ".$materno." , registrado con la clave ".$clave;
 
@@ -118,6 +139,12 @@ $consultar = mysqli_query($conexionLi, $cadena);
                 <td>
                     <button <?php echo $dtnDesabilita?> type="button" class="audio btn btn-link btn-sm activo"  id="btnSonido<?php echo $varGral?><?php echo $n?>" onclick="hablar('<?php echo $sonido?>')">
                     <i id="icoSound<?php echo $varGral?><?php echo $n?>" class="<?php echo $iconSound?>"></i>
+                    </button>
+                </td>
+                <!-- AQUI VA EL BOTON DE HORARIOS -->
+                <td>
+                    <button <?php echo $dtnDesabilita?> tieneHorario="<?php echo $tieneHorario ?>" type="button" class="horario btn <?php echo $btnHorario ?> btn-sm activo"  id="btnHorario<?php echo $varGral?><?php echo $n?>" onclick="abrirModalHorario(<?php echo $id ?>,'<?php echo $nCompleto ?>','<?php echo $tieneHorario ?>','<?php echo $id_horario ?>', '<?php echo $turno ?>')">
+                    <i id="icoHorario<?php echo $varGral?><?php echo $n?>" class="<?php echo $iconHorario?>"></i>
                     </button>
                 </td>
                 <td>
@@ -163,6 +190,7 @@ $consultar = mysqli_query($conexionLi, $cadena);
                 <th scope="col">Datos</th>
                 <th scope="col">Foto</th>
                 <th scope="col">Audio</th>
+                <th scope="col">Horario</th>
                 <th scope="col">Clave</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Ap. Paterno</th>
