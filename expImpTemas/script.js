@@ -1,14 +1,16 @@
-function exportar(){
-    valor=$("#listaTemas").val();
-    console.log(valor);
+function exportar(id_tema){
+
+    valor = id_tema;
+    console.log("El ID del tema a exportar es: "+valor);
+
     $.ajax({
-        url:"exportar.php",
+        url:"../expImpTemas/exportar.php",
         type:"POST",
         dateType:"html",
         data:{valor},
         success:function(respuesta){
            // console.log(respuesta);
-            preloader(1,"Generando archivo JSON","Se ha importado el archivo de manera exitosa !")
+            preloader(1,"Generando archivo JSON","Se ha importado el archivo de manera exitosa !");
             
         },
         error:function(xhr,status){
@@ -17,13 +19,13 @@ function exportar(){
     });
 }
 
-$("#btnExportar").click(function(){
-    exportar();
-});
+// $("#btnExportar").click(function(){
+//     exportar();
+// });
 
-$("#btnImportar").click(function(){
-    abrirModalArchivo();
-});
+// $("#btnImportar").click(function(){
+//     abrirModalArchivo();
+// });
 
 function abrirModalArchivo() {
     $("#modalArchivo").modal("show");
@@ -87,54 +89,69 @@ function cerrarModalCarga(alerta="Se ha ejecutado la acción exitosamente") {
 }
 
 function importarArchivo(){
-    var files = $('#image')[0].files[0];
-    var archivo=files.name;
-    var ruta= "Temas/"+archivo;
+    var files = $('#image2')[0].files[0];
 
-    console.log(ruta);
-    
-    $.getJSON(ruta, function(data){
-        //for para decorre las propiedades
-        for(tema in data){
+    if (files) {
+        var archivo=files.name;
+        var fileExtension = archivo.split(".")[1];
 
-            var nombre_tema       = data[tema].nombre_tema;
-            var color_letra       = data[tema].color_letra;
-            var color_base        = data[tema].color_base;
-            var color_base_fuerte = data[tema].color_base_fuerte;
-            var color_borde       = data[tema].color_borde;
-            var fecha_registro    = data[tema].fecha_registro;
-            var hora_registro     = data[tema].hora_registro;
+        if (fileExtension == "json") {
 
-            $.ajax({
-                url:"importar.php",
-                type:"POST",
-                dateType:"html",
-                data:{nombre_tema,color_letra,color_base,color_base_fuerte,color_borde,fecha_registro,hora_registro},
-                success:function(respuesta){
-                    console.log(respuesta);
-                    var bandera=respuesta;
-                    if (bandera==0) {
-                        preloader(1,"Importando Tema ...");
-                        $("#modalArchivo").modal("hide");
-                        combo_temas();
-                    }else{
-                        swal({
-                            title: "Error!",
-                            text: "Ya existe un tema con el nombre "+nombre_tema,
-                            type: "error",
-                            confirmButtonClass: "btn-dark",
-                            confirmButtonText: "Enterado"
-                        }, function (isConfirm) {
-                            alertify.message("Gracias !");
-                        });
-                    }
-                   
-                },
-                error:function(xhr,status){
-                    alert("Error en metodo AJAX"); 
-                },
+            var ruta= "Temas/"+archivo;
+            console.log(ruta);
+            
+            $.getJSON(ruta, function(data){
+                //for para decorre las propiedades
+                for(tema in data){
+
+                    var nombre_tema       = data[tema].nombre_tema;
+                    var color_letra       = data[tema].color_letra;
+                    var color_base        = data[tema].color_base;
+                    var color_base_fuerte = data[tema].color_base_fuerte;
+                    var color_borde       = data[tema].color_borde;
+                    var fecha_registro    = data[tema].fecha_registro;
+                    var hora_registro     = data[tema].hora_registro;
+
+                    $.ajax({
+                        url:"importar.php",
+                        type:"POST",
+                        dateType:"html",
+                        data:{nombre_tema,color_letra,color_base,color_base_fuerte,color_borde,fecha_registro,hora_registro},
+                        success:function(respuesta){
+                            console.log(respuesta);
+                            var bandera=respuesta;
+                            if (bandera==0) {
+                                preloader(1,"Importando Tema ...");
+                                $("#modalArchivo").modal("hide");
+                                combo_temas();
+                            }else{
+                                swal({
+                                    title: "Error!",
+                                    text: "Ya existe un tema con el nombre "+nombre_tema,
+                                    type: "error",
+                                    confirmButtonClass: "btn-dark",
+                                    confirmButtonText: "Enterado"
+                                }, function (isConfirm) {
+                                    alertify.message("Gracias !");
+                                });
+                            }
+                        
+                        },
+                        error:function(xhr,status){
+                            alert("Error en metodo AJAX"); 
+                        },
+                    });
+                }
             });
         }
-    });
+        else{
+            console.log("Formato de archivo no válido");
+            Swal.fire("Error","El formato del archivo no es válido", "error");
+        }
+    }
+    else{
+        console.log("No ha ingresado ningun archivo");
+        Swal.fire("Error","No se ha ingresado ningun archivo", "error");
+    }  
 }
 

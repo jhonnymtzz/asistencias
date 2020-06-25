@@ -92,7 +92,7 @@ $consultar = mysqli_query($conexionLi, $cadena);
                 $iconHorario="fas fa-times fa-lg";
                 $btnHorario = "btn-outline-secondary";
                 $id_horario = "no";
-                $turno = "esp";
+                $turno = "no";
             }
             else{
                 $tieneHorario = "si";

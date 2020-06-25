@@ -145,6 +145,10 @@ function ocultarSecciones(){
     $("#guardar-DP").hide();
     $("#editar-DP").hide();
     $("#Listado-DP").hide();
+    //CREAR TEMAS
+    // $("#datosPersona").hide();
+    $("#guardarEditar-CT").hide();
+    $("#Listado-CT").hide();
     //ESTADO CIVIL
     $("#estadoCivil").hide();
     $("#guardar-EC").hide();
@@ -179,6 +183,19 @@ function verDatosPersonales(){
     llenar_lista_DP();
     var idTema=$("#inicioIdTema").val()
     aplicarTema(idTema,'otro');      
+}
+
+function verCrearTemas(){
+    ocultarSecciones();
+    $("#lblTitular").text("Crear Temas");
+
+    $("#Listado-CT").fadeIn();
+    $("#frmGuardarEditar-CT")[0].reset();
+    $("#badgeInfo").text("Lista");
+    
+    llenarListaCT();
+    var idTema=$("#inicioIdTema").val()
+    aplicarTema(idTema,'otro');   
 }
 
 function verEstadoCivil(){

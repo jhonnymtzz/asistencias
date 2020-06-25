@@ -88,7 +88,7 @@ $fecha=date("Y-m-d");
                     </div>
                 </div>
             </div>
-
+            <!-- CONTENEDOR ASISTENCIAS -->
             <div class="container" id="asistencias">
                 <section id="asistencia-AS">
                     <?php
@@ -96,41 +96,52 @@ $fecha=date("Y-m-d");
                     ?>
                 </section>
             </div>
-
+            <!-- CONTENEDOR DATOS PERSONALES -->
             <div class="container-fluid" id="datosPersona">
+                <!-- Seción Guardar -->
                 <section id="guardar-DP" style="display:none;">
                     <?php
                         include'../mDatosPersonales/formGuardar.php';
                     ?>
                 </section>
-
+                <!-- Sección Editar -->
                 <section id="editar-DP" style="display:none;">
                     <?php
                         include'../mDatosPersonales/formEditar.php';
                     ?>
                 </section>
-                
+                <!-- Sección Lista -->
                 <section id="Listado-DP" class="animated  fadeIn contenedor" style="display:none;"></section>
             </div>        
-
+            <!-- CONTENEDOR CREAR TEMA -->
+            <div class="container" id="crearTema">
+                <!-- Seción Guardar y Editar en un solo formulario-->
+                <section id="guardarEditar-CT" style="display:none;">
+                    <?php
+                        include '../mCrearTema/formGuardarEditar.php';
+                    ?>
+                </section>
+                <!-- Sección Lista -->
+                <section id="Listado-CT" class="animated fadeIn contenedor" style="display:none;"></section>
+            </div>
+            <!-- CONTENEDOR ESTADO CIVIL -->
             <div class="container" id="estadoCivil">
+                <!-- Seción Guardar -->
                 <section id="guardar-EC" style="display:none;">
                     <?php
                         include'../mEstadoCivil/formGuardar.php';
                     ?>
                 </section>
-
+                <!-- Sección Editar -->
                 <section id="editar-EC" style="display:none;">
                     <?php
                         include'../mEstadoCivil/formEditar.php';
                     ?>
                 </section>
-                
+                <!-- Sección Lista -->
                 <section id="Listado-EC" class="animated  fadeIn contenedor" style="display:none;"></section>
             </div>       
-
         </div>
-
     </div>
 
     <!-- Modal de carga -->
@@ -145,6 +156,8 @@ $fecha=date("Y-m-d");
     <!-- Modal de PDF -->
         <?php include'../modales/modalPDF.php'; ?>
     <!-- Modal de PDF -->
+    <!-- Modal Importar Tema -->
+    <?php include "../mCrearTema/modalImpTema.php"; ?>
 
     <!-- jQuery -->
     <script src="../plugins/jQuery/jquery-3.3.1.js"></script>   
@@ -152,11 +165,15 @@ $fecha=date("Y-m-d");
     <script src="../plugins/bootstrap-4.0.0/dist/js/bootstrap.js"></script> 
     <!-- Alertifyjs -->  
     <script src="../plugins/alertifyjs/alertify.min.js"></script> 
+
     <!-- Funciones Propias -->
     <script src="funcionesI.js"></script> <!-- Inicio -->
     <script src="../mLogin/funcionesL.js"></script> <!-- Login -->
     <script src="../mDatosPersonales/funcionesDP.js"></script> <!-- Datos Personales --> 
     <script src="../mEstadoCivil/funcionesEC.js"></script> <!-- Estado Civil -->
+    <script src="../mCrearTema/funcionesCT.js"></script> <!-- Crear Tema -->
+    <script src="../expImpTemas/script.js"></script>
+    
     <!-- DataTables -->
     <script src="../plugins/dataTablesB4/js/jquery.dataTables.min.js"></script>
     <script src="../plugins/dataTablesB4/js/dataTables.bootstrap4.min.js"></script>
