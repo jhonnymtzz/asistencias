@@ -29,6 +29,7 @@ function exportar(id_tema){
 
 function abrirModalArchivo() {
     $("#modalArchivo").modal("show");
+    // $("#formSubida2")[0].reset();
 }
 
 //llenar combo
@@ -97,7 +98,7 @@ function importarArchivo(){
 
         if (fileExtension == "json") {
 
-            var ruta= "Temas/"+archivo;
+            var ruta= "../expImpTemas/Temas/"+archivo;
             console.log(ruta);
             
             $.getJSON(ruta, function(data){
@@ -113,7 +114,7 @@ function importarArchivo(){
                     var hora_registro     = data[tema].hora_registro;
 
                     $.ajax({
-                        url:"importar.php",
+                        url:"../expImpTemas/importar.php",
                         type:"POST",
                         dateType:"html",
                         data:{nombre_tema,color_letra,color_base,color_base_fuerte,color_borde,fecha_registro,hora_registro},
@@ -123,7 +124,7 @@ function importarArchivo(){
                             if (bandera==0) {
                                 preloader(1,"Importando Tema ...");
                                 $("#modalArchivo").modal("hide");
-                                combo_temas();
+                                llenarListaCT();
                             }else{
                                 swal({
                                     title: "Error!",
